@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 using Vehicles.Api.Data;
 using Vehicles.Api.Data.Entities;
 
@@ -25,23 +22,7 @@ namespace Vehicles.Api.Controllers
             return View(await _context.VehiclesType.ToListAsync());
         }
 
-        // GET: VehiclesTypes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var vehiclesType = await _context.VehiclesType
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehiclesType == null)
-            {
-                return NotFound();
-            }
-
-            return View(vehiclesType);
-        }
 
         // GET: VehiclesTypes/Create
         public IActionResult Create()
@@ -54,13 +35,31 @@ namespace Vehicles.Api.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description")] VehiclesType vehiclesType)
+        public async Task<IActionResult> Create(VehiclesType vehiclesType)//[Bind("Id,Description")]  se puede quitar
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehiclesType);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(vehiclesType);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbUpdateException)
+                {   //validacion en caso de un duplicado
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya exixte este tipo de vehiculo");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception Exception)
+                {
+                    ModelState.AddModelError(string.Empty, Exception.Message);
+                }
             }
             return View(vehiclesType);
         }
@@ -73,7 +72,7 @@ namespace Vehicles.Api.Controllers
                 return NotFound();
             }
 
-            var vehiclesType = await _context.VehiclesType.FindAsync(id);
+            VehiclesType vehiclesType = await _context.VehiclesType.FindAsync(id);
             if (vehiclesType == null)
             {
                 return NotFound();
@@ -86,7 +85,7 @@ namespace Vehicles.Api.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description")] VehiclesType vehiclesType)
+        public async Task<IActionResult> Edit(int id, VehiclesType vehiclesType)//se quita [Bind("Id,Description")] 
         {
             if (id != vehiclesType.Id)
             {
@@ -99,19 +98,24 @@ namespace Vehicles.Api.Controllers
                 {
                     _context.Update(vehiclesType);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VehiclesTypeExists(vehiclesType.Id))
+                catch (DbUpdateException dbUpdateException)
+                {   //validacion en caso de un duplicado
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty, "Ya exixte este tipo de vehiculo");
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                catch (Exception Exception)
+                {
+                    ModelState.AddModelError(string.Empty, Exception.Message);
+                }
+
             }
             return View(vehiclesType);
         }
@@ -124,30 +128,17 @@ namespace Vehicles.Api.Controllers
                 return NotFound();
             }
 
-            var vehiclesType = await _context.VehiclesType
+            VehiclesType vehiclesType = await _context.VehiclesType
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (vehiclesType == null)
             {
                 return NotFound();
             }
 
-            return View(vehiclesType);
-        }
-
-        // POST: VehiclesTypes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var vehiclesType = await _context.VehiclesType.FindAsync(id);
             _context.VehiclesType.Remove(vehiclesType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VehiclesTypeExists(int id)
-        {
-            return _context.VehiclesType.Any(e => e.Id == id);
-        }
     }
 }
