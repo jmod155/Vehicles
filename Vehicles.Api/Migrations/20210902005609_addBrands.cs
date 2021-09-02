@@ -2,12 +2,12 @@
 
 namespace Vehicles.Api.Migrations
 {
-    public partial class AddTableVehicleType : Migration
+    public partial class addBrands : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "VehiclesType",
+                name: "Brands",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -16,12 +16,12 @@ namespace Vehicles.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VehiclesType", x => x.Id);
+                    table.PrimaryKey("PK_Brands", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_VehiclesType_Description",
-                table: "VehiclesType",
+                name: "IX_Brands_Description",
+                table: "Brands",
                 column: "Description",
                 unique: true);
         }
@@ -29,7 +29,7 @@ namespace Vehicles.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "VehiclesType");
+                name: "Brands");
         }
     }
 }

@@ -9,8 +9,8 @@ using Vehicles.Api.Data;
 namespace Vehicles.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210901005122_AddTableProceduresdecimal1")]
-    partial class AddTableProceduresdecimal1
+    [Migration("20210902010707_addBrandsindex")]
+    partial class addBrandsindex
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,26 @@ namespace Vehicles.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Vehicles.Api.Data.Entities.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Description")
+                        .IsUnique();
+
+                    b.ToTable("Brands");
+                });
 
             modelBuilder.Entity("Vehicles.Api.Data.Entities.Procedure", b =>
                 {
@@ -33,7 +53,7 @@ namespace Vehicles.Api.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

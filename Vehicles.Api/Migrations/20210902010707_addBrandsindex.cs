@@ -2,7 +2,7 @@
 
 namespace Vehicles.Api.Migrations
 {
-    public partial class AddTableProceduresdecimal2d : Migration
+    public partial class addBrandsindex : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
