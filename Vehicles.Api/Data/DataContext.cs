@@ -15,6 +15,7 @@ namespace Vehicles.Api.Data
         }
         //nombre de la tabla a crear (clase )
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Procedure> Procedures { get; set; }
         public DbSet<VehiclesType> VehiclesType { get; set; }
 
@@ -24,6 +25,7 @@ namespace Vehicles.Api.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Brand>().HasIndex(x => x.Description).IsUnique(); //se especifica que el campo va a ser unico
+            modelBuilder.Entity<DocumentType>().HasIndex(x => x.Description).IsUnique(); //se especifica que el campo va a ser unico
             modelBuilder.Entity<Procedure>().HasIndex(x => x.Description).IsUnique(); //se especifica que el campo va a ser unico
             modelBuilder.Entity<VehiclesType>().HasIndex(x => x.Description).IsUnique(); //se especifica que el campo va a ser unico
         }
