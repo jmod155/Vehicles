@@ -14,5 +14,7 @@ namespace Vehicles.Api.Data.Entities
         [MaxLength(50, ErrorMessage = "El campo {0} no puede tener mas de {1} Caracteres")]
         [Required(ErrorMessage = "El campo {0} es Obligatorio")] //DataAnnotations para hacer el campo requerido(ErrorMessage = mensaje personalizado)
         public string Description { get; set; }
+
+        public ICollection<User> Users { get; set; }
     }
 }

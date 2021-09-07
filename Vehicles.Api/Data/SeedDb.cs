@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicles.Api.Data.Entities;
+using Vehicles.Api.Helpers;
+using Vehicles.Common.Enums;
 
 namespace Vehicles.Api.Data
 {
@@ -11,11 +13,14 @@ namespace Vehicles.Api.Data
     public class SeedDb
     {
         private readonly DataContext _context;
-        public SeedDb(DataContext context)
+        private readonly IUserHelper _userHelper;
+
+        public SeedDb(DataContext context,IUserHelper userHelper)
         {
             _context = context;
-            
-        }
+            _userHelper = userHelper;
+
+    }
         //metodo para verificar si la bd existe o tiene migraciones 
         //pendientes si no existe la bd la crea y si no hace nada
         public async Task SeedAsync()
@@ -27,6 +32,38 @@ namespace Vehicles.Api.Data
             await checkBrandsAsync();
             await checkDocumentTypesAsync();
             await checkProceduresAsync();
+            await checkRolesAsync();
+            await checkUserAsync("1010","jose","ortiz","jose@yopmail.com","311 322 4620","calle 123",UserType.Admin);
+            await checkUserAsync("2020", "luis", "ortiz", "luis@yopmail.com", "311 322 4620", "calle 123", UserType.User);
+            await checkUserAsync("3030", "miguel", "ortiz", "miguel@yopmail.com", "311 322 4620", "calle 123", UserType.User);
+        }
+
+        private async Task checkUserAsync(string document, string firstName, string lastName, string email, string phoneNumber, string address, UserType userType)
+        {
+            User user = await _userHelper.GetUserAsync(email);//se busca el usuario
+            if (user ==null)
+            {
+                user = new User
+                {
+                    Address = address,
+                    Document = document,
+                    DocumentType = _context.DocumentTypes.FirstOrDefault(x => x.Description == "Cédula"),
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    PhoneNumber = phoneNumber,
+                    UserName = email,
+                    UserType = userType
+                };
+                await _userHelper.AddUserAsync(user, "123456");
+                await _userHelper.AddUserToRoleAsync(user, userType.ToString());
+            }
+        }
+
+        private async Task checkRolesAsync()
+        {
+            await _userHelper.CheckRoleAsync(UserType.Admin.ToString());//se crear el rol
+            await _userHelper.CheckRoleAsync(UserType.User.ToString());//se crear el rol
         }
 
         private async Task checkProceduresAsync()
@@ -54,7 +91,7 @@ namespace Vehicles.Api.Data
             //si no existen VehiclesType
             if (!_context.DocumentTypes.Any())
             {   //si no existen creo los registros
-                _context.DocumentTypes.Add(new DocumentType { Description = "Cedula" });
+                _context.DocumentTypes.Add(new DocumentType { Description = "Cédula" });
                 _context.DocumentTypes.Add(new DocumentType { Description = "Nit" });
                 _context.DocumentTypes.Add(new DocumentType { Description = "Pasaporte" });
                 await _context.SaveChangesAsync();
