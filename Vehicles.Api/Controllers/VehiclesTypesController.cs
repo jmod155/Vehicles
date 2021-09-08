@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Vehicles.Api.Data.Entities;
 
 namespace Vehicles.Api.Controllers
 {
+    
     public class VehiclesTypesController : Controller
     {
         private readonly DataContext _context;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Vehicles.Api.Data.Entities;
+using Vehicles.Api.Models;
 
 namespace Vehicles.Api.Helpers
 {
@@ -17,5 +18,8 @@ namespace Vehicles.Api.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);//para saber si existe o no en el rol
 
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+
+        Task LogoutAsync();
     }
 }

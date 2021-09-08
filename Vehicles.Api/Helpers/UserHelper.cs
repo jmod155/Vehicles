@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vehicles.Api.Data;
 using Vehicles.Api.Data.Entities;
+using Vehicles.Api.Models;
 
 namespace Vehicles.Api.Helpers
 {
@@ -13,13 +14,15 @@ namespace Vehicles.Api.Helpers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly DataContext context;
+        private readonly DataContext _context;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserHelper(UserManager<User> userManager,RoleManager<IdentityRole> roleManager, DataContext context)
+        public UserHelper(UserManager<User> userManager,RoleManager<IdentityRole> roleManager, DataContext context, SignInManager<User> signInManager)
     {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this.context = context;
+           _userManager = userManager;
+           _roleManager = roleManager;
+           _context = context;
+           _signInManager = signInManager;
         }
 
     
@@ -45,7 +48,7 @@ namespace Vehicles.Api.Helpers
 
         public async Task<User> GetUserAsync(string email)
         {
-            return await context.Users
+            return await _context.Users
                 .Include(x => x.DocumentType)
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
@@ -53,6 +56,16 @@ namespace Vehicles.Api.Helpers
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {
             return await _userManager.IsInRoleAsync(user, roleName);
+        }
+
+        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }
