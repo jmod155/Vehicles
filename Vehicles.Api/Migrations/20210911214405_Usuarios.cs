@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Vehicles.Api.Migrations
 {
-    public partial class Addtables : Migration
+    public partial class Usuarios : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

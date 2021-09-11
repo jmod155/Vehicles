@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Vehicles.Api.Data.Entities;
 using Vehicles.Api.Helpers;
@@ -15,12 +13,12 @@ namespace Vehicles.Api.Data
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
 
-        public SeedDb(DataContext context,IUserHelper userHelper)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
             _userHelper = userHelper;
 
-    }
+        }
         //metodo para verificar si la bd existe o tiene migraciones 
         //pendientes si no existe la bd la crea y si no hace nada
         public async Task SeedAsync()
@@ -28,20 +26,21 @@ namespace Vehicles.Api.Data
             //se vericaa que existe la bd
             await _context.Database.EnsureCreatedAsync();
             //se verifica que existan los tipos de vehiculos
-            await checkVehiclesTypeAsync();
-            await checkBrandsAsync();
-            await checkDocumentTypesAsync();
-            await checkProceduresAsync();
-            await checkRolesAsync();
-            await checkUserAsync("1010","jose","ortiz","jose@yopmail.com","311 322 4620","calle 123",UserType.Admin);
-            await checkUserAsync("2020", "luis", "ortiz", "luis@yopmail.com", "311 322 4620", "calle 123", UserType.User);
-            await checkUserAsync("3030", "miguel", "ortiz", "miguel@yopmail.com", "311 322 4620", "calle 123", UserType.User);
+            await CheckVehiclesTypeAsync();
+            await CheckBrandsAsync();
+            await CheckDocumentTypesAsync();
+            await CheckProceduresAsync();
+            await CheckRolesAsync();
+            await CheckUserAsync("10", "JM", "ortiz", "JM@yopmail.com", "311 322 4620", "calle 123", UserType.Admin);
+            await CheckUserAsync("1010", "jose", "ortiz", "jose@yopmail.com", "311 322 4620", "calle 123", UserType.Admin);
+            await CheckUserAsync("2020", "luis", "ortiz", "luis@yopmail.com", "311 322 4620", "calle 123", UserType.User);
+            await CheckUserAsync("3030", "miguel", "ortiz", "miguel@yopmail.com", "311 322 4620", "calle 123", UserType.User);
         }
 
-        private async Task checkUserAsync(string document, string firstName, string lastName, string email, string phoneNumber, string address, UserType userType)
+        private async Task CheckUserAsync(string document, string firstName, string lastName, string email, string phoneNumber, string address, UserType userType)
         {
             User user = await _userHelper.GetUserAsync(email);//se busca el usuario
-            if (user ==null)
+            if (user == null) //si no existe se crea
             {
                 user = new User
                 {
@@ -60,13 +59,13 @@ namespace Vehicles.Api.Data
             }
         }
 
-        private async Task checkRolesAsync()
+        private async Task CheckRolesAsync()
         {
             await _userHelper.CheckRoleAsync(UserType.Admin.ToString());//se crear el rol
             await _userHelper.CheckRoleAsync(UserType.User.ToString());//se crear el rol
         }
 
-        private async Task checkProceduresAsync()
+        private async Task CheckProceduresAsync()
         {
             //si no existen VehiclesType
             if (!_context.Procedures.Any())
@@ -81,12 +80,12 @@ namespace Vehicles.Api.Data
                 _context.Procedures.Add(new Procedure { Price = 80000, Description = "Calibración de válvulas" });
                 _context.Procedures.Add(new Procedure { Price = 90000, Description = "Alineación carburador" });
                 _context.Procedures.Add(new Procedure { Price = 100000, Description = "Aceite motor" });
-                
+
                 await _context.SaveChangesAsync();
             }
         }
 
-        private async Task checkDocumentTypesAsync()
+        private async Task CheckDocumentTypesAsync()
         {
             //si no existen VehiclesType
             if (!_context.DocumentTypes.Any())
@@ -98,7 +97,7 @@ namespace Vehicles.Api.Data
             }
         }
 
-        private async Task checkBrandsAsync()
+        private async Task CheckBrandsAsync()
         {
             //si no existen VehiclesType
             if (!_context.Brands.Any())
@@ -111,7 +110,7 @@ namespace Vehicles.Api.Data
             }
         }
 
-        private async Task checkVehiclesTypeAsync()
+        private async Task CheckVehiclesTypeAsync()
         {    //si no existen VehiclesType
             if (!_context.VehiclesType.Any())
             {   //si no existen creo los registros

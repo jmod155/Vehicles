@@ -32,7 +32,8 @@ namespace Vehicles.Api.Controllers
         {
             if (ModelState.IsValid) //se valida que cumpla las condiciones que se delararon en LoginViewModel
             {  //
-                Microsoft.AspNetCore.Identity.SignInResult result = await _userHelper.LoginAsync(model);
+                //Microsoft.AspNetCore.Identity.SignInResult result = await _userHelper.LoginAsync(model);
+                var result = await _userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
                     if (Request.Query.Keys.Contains("ReturnUrl"))

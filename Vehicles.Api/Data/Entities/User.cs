@@ -37,11 +37,11 @@ namespace Vehicles.Api.Data.Entities
         [Display(Name = "Foto")]
         public Guid ImageId { get; set; }
 
-        //TODO :primera imagen
+        //TODO :primera imagen definir ruta imagen
         [Display(Name = "Foto")]
-        public string ImageFullPath => ImageId == Guid.Empty
-            ? $"https://localhost:44354/images/noimage.png"  
-            : $"https://vehicleszulu.blob.core.windows.net/users/{ImageId}";
+        public string ImageFullPath => ImageId == Guid.Empty//manejo de foto
+            ? $"https://localhost:44354/images/noimage.png"  //si no hay  imagen
+            : $"https://vehicleszulu.blob.core.windows.net/users/{ImageId}";//si tiene imagen muestra un blog
 
         [Display(Name = "Tipo de Usuario")]
         public UserType UserType { get; set; }//enum del proyecto DataAnnotations

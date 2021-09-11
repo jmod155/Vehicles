@@ -36,6 +36,8 @@ namespace Vehicles.Api
                 x.Password.RequireLowercase = false;//requiere 
                 x.Password.RequireNonAlphanumeric = false;
                 x.Password.RequireUppercase = false;
+               
+                //.AddRoles<IdentityRole>()
             }).AddEntityFrameworkStores<DataContext>();//nuestros passwoer se tienene en el datacontext
             //inyeccion de dependencias   de la base de datos
             services.AddDbContext<DataContext>(x =>
@@ -66,12 +68,11 @@ namespace Vehicles.Api
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseAuthentication();//se agrega la autenticacion esta etiqueta si se agrega de ultimo no fuenciona [Authorize(Roles = "Admin")]
             app.UseRouting();
+            app.UseAuthorization();//se agrega la autenticacion
+                                   //se agrega la autenticacion
 
-            app.UseAuthorization();
-            //se agrega la autenticacion
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

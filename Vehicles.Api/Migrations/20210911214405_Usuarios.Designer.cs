@@ -10,8 +10,8 @@ using Vehicles.Api.Data;
 namespace Vehicles.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210907012201_Addtables")]
-    partial class Addtables
+    [Migration("20210911214405_Usuarios")]
+    partial class Usuarios
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

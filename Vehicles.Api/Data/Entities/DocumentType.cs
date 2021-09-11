@@ -15,6 +15,6 @@ namespace Vehicles.Api.Data.Entities
         [Required(ErrorMessage = "El campo {0} es Obligatorio")] //DataAnnotations para hacer el campo requerido(ErrorMessage = mensaje personalizado)
         public string Description { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public ICollection<User> Users { get; set; }//referencia a usuario un documento tiene muchos usuarios
     }
 }

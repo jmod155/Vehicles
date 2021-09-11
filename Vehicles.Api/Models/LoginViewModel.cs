@@ -9,7 +9,7 @@ namespace Vehicles.Api.Models
     public class LoginViewModel
     {
         [Display(Name = "Email")]
-        [EmailAddress(ErrorMessage = "Debes introducir un email válido.")]
+        [EmailAddress(ErrorMessage = "Debes introducir un email válido.")]//valida formato email
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Username { get; set; }
 

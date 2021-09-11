@@ -10,6 +10,7 @@ using Vehicles.Api.Data.Entities;
 
 namespace Vehicles.Api.Controllers
 {
+   
     [Authorize(Roles = "Admin")]
     public class ProceduresController : Controller
     {
